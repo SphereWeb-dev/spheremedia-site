@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaStar, FaRobot, FaInstagram } from "react-icons/fa";
 
 export default function App() {
+  const [chatOpen, setChatOpen] = useState(false);
+
+  const toggleChat = () => {
+    setChatOpen((prev) => !prev);
+  };
+
   return (
-    <div className="relative bg-gradient-to-br from-[#0A0A1A] via-[#1a0025] to-[#0A0A1A] text-white font-sans overflow-x-hidden">
+    <div className="relative bg-gradient-to-br from-[#0A0A1A] via-[#1a0025] to-[#0A0A1A] text-white font-sans overflow-x-hidden scroll-smooth">
       {/* Hero Section */}
       <section className="min-h-screen flex flex-col justify-center items-center text-center px-4">
         <img
@@ -33,13 +39,20 @@ export default function App() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9 }}
         >
-          <button className="mt-6 px-8 py-4 text-lg bg-pink-600 hover:bg-pink-700 rounded-full shadow-lg">
+          <button
+            onClick={() =>
+              document
+                .getElementById("contact")
+                .scrollIntoView({ behavior: "smooth" })
+            }
+            className="mt-6 px-8 py-4 text-lg bg-pink-600 hover:bg-pink-700 rounded-full shadow-lg"
+          >
             Launch Your Brand 🚀
           </button>
         </motion.div>
       </section>
 
-      {/* Services Section */}
+      {/* Services */}
       <section className="py-20 px-6 text-center">
         <h2 className="text-3xl font-bold text-pink-500 mb-12">Our Services</h2>
         <div className="grid gap-8 md:grid-cols-3">
@@ -65,7 +78,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* Ratings Section */}
+      {/* Ratings */}
       <section className="py-20 px-6 bg-[#0F0A1A] text-center">
         <h2 className="text-3xl font-bold text-purple-400 mb-10">Client Ratings</h2>
         <div className="grid gap-10 md:grid-cols-3">
@@ -96,8 +109,8 @@ export default function App() {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="py-20 px-6 text-center">
+      {/* Contact */}
+      <section id="contact" className="py-20 px-6 text-center">
         <h2 className="text-3xl font-bold text-pink-400 mb-10">Let’s Work Together</h2>
         <form className="max-w-xl mx-auto grid gap-4">
           <input
@@ -126,6 +139,7 @@ export default function App() {
 
       {/* Floating Chatbot */}
       <motion.div
+        onClick={toggleChat}
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.2 }}
@@ -134,6 +148,24 @@ export default function App() {
       >
         <FaRobot size={24} />
       </motion.div>
+
+      {/* Chatbot Popup */}
+      {chatOpen && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed bottom-24 right-6 w-72 bg-[#1f1a2e] p-4 rounded-xl shadow-lg text-left z-30"
+        >
+          <p className="text-sm text-purple-300 mb-2">SphereBot 🤖</p>
+          <div className="text-white text-sm mb-2">Hi! How can we help you today?</div>
+          <input
+            type="text"
+            placeholder="Type your question..."
+            className="w-full p-2 rounded bg-[#2a1f3a] text-white"
+          />
+        </motion.div>
+      )}
 
       {/* Floating Instagram Button */}
       <a
