@@ -676,7 +676,11 @@ export default function App() {
         <header className="fixed top-0 left-0 w-full p-4 z-50 bg-black/10 backdrop-blur-sm">
           <div className="container mx-auto flex justify-between items-center">
             {/* Corrected image path for logo */}
-            <img src="/logo.png" alt="Logo" className="w-16 h-16" />
+            <img 
+  src="/logo.png" 
+  alt="Logo" 
+  className="w-16 h-16 rounded-full object-cover"
+/>
             {isLaunched && (
               <nav className="hidden md:flex space-x-6 text-white" style={{ animation: 'fadeIn 1s ease-in' }}>
                 <a href="#about" className="hover:text-pink-400 transition-colors">About</a>
