@@ -93,7 +93,7 @@ const ParticleBackground = () => {
         this.size = Math.random() * 2 + 1;
         this.speedX = Math.random() * 0.5 - 0.25;
         this.speedY = Math.random() * 0.5 - 0.25;
-        this.color = rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2});
+        this.color = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2})`;
       }
       update() {
         this.x += this.speedX;
@@ -155,7 +155,7 @@ const PointerTrail = () => {
             position: 'fixed',
             top: 0,
             left: 0,
-            transform: translate(${x}px, ${y}px),
+            transform: `translate(${x}px, ${y}px)`,
             width: '40px',
             height: '40px',
             borderRadius: '50%',
@@ -176,7 +176,7 @@ const HeroSection = ({ onLaunch }) => {
     <section className="min-h-screen flex flex-col items-center justify-center text-center text-white p-4 relative z-10">
       <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-6">
         {text.map((char, index) => (
-          <span key={index} style={{ animation: fadeInUp 0.5s ${index * 0.05}s both }}>
+          <span key={index} style={{ animation: `fadeInUp 0.5s ${index * 0.05}s both` }}>
             {char === " " ? "\u00A0" : char}
           </span>
         ))}
@@ -220,12 +220,12 @@ const ServiceCard = ({ service }) => {
         setIsLoading(true);
         setIdeas(null);
         setError('');
-        const prompt = You are a creative strategist at a futuristic branding agency. Generate 3 short, innovative, and exciting project ideas for the following service: "${service.title}". Present them as a simple list with each idea on a new line, starting with a sparkle emoji (✨). Keep each idea to one sentence.;
+        const prompt = `You are a creative strategist at a futuristic branding agency. Generate 3 short, innovative, and exciting project ideas for the following service: "${service.title}". Present them as a simple list with each idea on a new line, starting with a sparkle emoji (✨). Keep each idea to one sentence.`;
         
         const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
         const payload = { contents: chatHistory };
         const apiKey = ""; // Left empty for runtime injection
-        const apiUrl = https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey};
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
         try {
             const response = await fetch(apiUrl, {
@@ -235,7 +235,7 @@ const ServiceCard = ({ service }) => {
             });
 
             if (!response.ok) {
-                throw new Error(API error: ${response.statusText});
+                throw new Error(`API error: ${response.statusText}`);
             }
 
             const result = await response.json();
@@ -403,12 +403,12 @@ const ContactSection = () => {
         }
         setIsGenerating(true);
         setError('');
-        const prompt = You are a creative director at a futuristic branding agency. Based on the following keywords: "${formData.keywords}", write an inspiring and professional project brief of about 50-70 words that we can present to a potential client. The tone should be confident and forward-thinking.;
+        const prompt = `You are a creative director at a futuristic branding agency. Based on the following keywords: "${formData.keywords}", write an inspiring and professional project brief of about 50-70 words that we can present to a potential client. The tone should be confident and forward-thinking.`;
         
         const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
         const payload = { contents: chatHistory };
         const apiKey = ""; // Left empty for runtime injection
-        const apiUrl = https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey};
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
         try {
             const response = await fetch(apiUrl, {
@@ -417,7 +417,7 @@ const ContactSection = () => {
                 body: JSON.stringify(payload)
             });
 
-            if (!response.ok) throw new Error(API error: ${response.statusText});
+            if (!response.ok) throw new Error(`API error: ${response.statusText}`);
             
             const result = await response.json();
             let resultText = "Could not generate a brief. Please try again.";
@@ -511,7 +511,7 @@ const NovaChatbot = () => {
     
     const payload = { contents: chatHistory };
     const apiKey = ""; // Left empty for runtime injection
-    const apiUrl = https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey};
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
     try {
         const response = await fetch(apiUrl, {
@@ -521,7 +521,7 @@ const NovaChatbot = () => {
         });
 
         if (!response.ok) {
-            throw new Error(API error: ${response.statusText});
+            throw new Error(`API error: ${response.statusText}`);
         }
 
         const result = await response.json();
@@ -553,13 +553,13 @@ const NovaChatbot = () => {
 
   return (
     <>
-      <div className={fixed bottom-6 right-6 z-40 transition-all duration-500 ${isOpen ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}}>
+      <div className={`fixed bottom-6 right-6 z-40 transition-all duration-500 ${isOpen ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}>
         <button onClick={() => setIsOpen(true)} className="bg-gradient-to-br from-cyan-400 to-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl shadow-blue-500/40 hover:scale-110 transform transition-transform duration-300">
           <MessageSquare className="w-8 h-8" />
         </button>
       </div>
 
-      <div className={fixed bottom-6 right-6 w-[calc(100%-3rem)] max-w-sm h-[70vh] max-h-[500px] z-50 transition-all duration-500 ease-in-out ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}}>
+      <div className={`fixed bottom-6 right-6 w-[calc(100%-3rem)] max-w-sm h-[70vh] max-h-[500px] z-50 transition-all duration-500 ease-in-out ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}>
         <div className="h-full w-full glass-card-dark rounded-2xl border border-cyan-500/50 flex flex-col shadow-2xl shadow-cyan-500/20">
           <div className="flex items-center justify-between p-4 border-b border-white/10">
             <h3 className="font-bold text-white text-lg">Nova AI</h3>
@@ -569,8 +569,8 @@ const NovaChatbot = () => {
           </div>
           <div className="flex-grow p-4 space-y-4 overflow-y-auto">
             {messages.map(msg => (
-              <div key={msg.id} className={flex ${msg.sender === 'ai' ? 'justify-start' : 'justify-end'}}>
-                <div className={max-w-[80%] p-3 rounded-lg ${msg.sender === 'ai' ? 'bg-blue-900/50 text-white' : 'bg-pink-800/50 text-white'}}>
+              <div key={msg.id} className={`flex ${msg.sender === 'ai' ? 'justify-start' : 'justify-end'}`}>
+                <div className={`max-w-[80%] p-3 rounded-lg ${msg.sender === 'ai' ? 'bg-blue-900/50 text-white' : 'bg-pink-800/50 text-white'}`}>
                   <p className="text-sm">{msg.text}</p>
                 </div>
               </div>
