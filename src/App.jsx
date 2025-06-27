@@ -34,14 +34,6 @@ const Sparkles = ({ className }) => (
     </svg>
 );
 
-const MenuIcon = ({ className }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="3" y1="12" x2="21" y2="12"></line>
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="18" x2="21" y2="18"></line>
-    </svg>
-);
-
 
 // Custom Hook for Mouse Position
 const useMousePosition = () => {
@@ -80,9 +72,11 @@ const ParticleBackground = () => {
     
     resizeCanvas();
     
-    const resizeObserver = new ResizeObserver(() => {
-        resizeCanvas();
-        init(); 
+    const resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+            resizeCanvas();
+            init(); 
+        }
     });
 
     resizeObserver.observe(document.body);
@@ -90,7 +84,7 @@ const ParticleBackground = () => {
 
 
     let particles = [];
-    const particleCount = Math.floor((window.innerWidth * window.innerHeight) / 20000);
+    const particleCount = Math.floor((canvas.width * canvas.height) / 8000);
 
     class Particle {
       constructor(x, y) {
@@ -99,7 +93,7 @@ const ParticleBackground = () => {
         this.size = Math.random() * 2 + 1;
         this.speedX = Math.random() * 0.5 - 0.25;
         this.speedY = Math.random() * 0.5 - 0.25;
-        this.color = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2})`;
+        this.color = rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2});
       }
       update() {
         this.x += this.speedX;
@@ -157,11 +151,11 @@ const PointerTrail = () => {
     }, [x, y]);
 
     return (
-        <div className="hidden md:block" style={{
+        <div style={{
             position: 'fixed',
             top: 0,
             left: 0,
-            transform: `translate(${x}px, ${y}px)`,
+            transform: translate(${x}px, ${y}px),
             width: '40px',
             height: '40px',
             borderRadius: '50%',
@@ -182,7 +176,7 @@ const HeroSection = ({ onLaunch }) => {
     <section className="min-h-screen flex flex-col items-center justify-center text-center text-white p-4 relative z-10">
       <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-6">
         {text.map((char, index) => (
-          <span key={index} style={{ animation: `fadeInUp 0.5s ${index * 0.05}s both` }}>
+          <span key={index} style={{ animation: fadeInUp 0.5s ${index * 0.05}s both }}>
             {char === " " ? "\u00A0" : char}
           </span>
         ))}
@@ -204,12 +198,12 @@ const HeroSection = ({ onLaunch }) => {
 
 // 4. About Section
 const AboutSection = () => (
-  <section id="about" className="py-16 md:py-20 px-4 text-white relative z-10">
+  <section id="about" className="py-20 px-4 text-white relative z-10">
     <div className="container mx-auto max-w-4xl text-center">
-      <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
+      <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
         Our Vision for Design
       </h2>
-      <p className="text-base md:text-lg text-gray-300 leading-relaxed">
+      <p className="text-lg text-gray-300 leading-relaxed">
         At Spheremedia, we do more than just build websites; we create unique digital experiences. Our team of creative designers and developers is dedicated to helping brands succeed online. We believe a great digital presence should be memorable and easy to use, turning visitors into loyal customers.
       </p>
     </div>
@@ -226,12 +220,12 @@ const ServiceCard = ({ service }) => {
         setIsLoading(true);
         setIdeas(null);
         setError('');
-        const prompt = `You are a creative strategist at a futuristic branding agency. Generate 3 short, innovative, and exciting project ideas for the following service: "${service.title}". Present them as a simple list with each idea on a new line, starting with a sparkle emoji (✨). Keep each idea to one sentence.`;
+        const prompt = You are a creative strategist at a futuristic branding agency. Generate 3 short, innovative, and exciting project ideas for the following service: "${service.title}". Present them as a simple list with each idea on a new line, starting with a sparkle emoji (✨). Keep each idea to one sentence.;
         
         const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
         const payload = { contents: chatHistory };
         const apiKey = ""; // Left empty for runtime injection
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        const apiUrl = https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey};
 
         try {
             const response = await fetch(apiUrl, {
@@ -241,7 +235,7 @@ const ServiceCard = ({ service }) => {
             });
 
             if (!response.ok) {
-                throw new Error(`API error: ${response.statusText}`);
+                throw new Error(API error: ${response.statusText});
             }
 
             const result = await response.json();
@@ -264,7 +258,7 @@ const ServiceCard = ({ service }) => {
     
     return (
         <div className="glass-card p-6 rounded-2xl border border-white/10 hover:border-pink-500/50 transition-all duration-300 transform group flex flex-col">
-            <h3 className="text-xl md:text-2xl font-bold mb-3 text-white">{service.title}</h3>
+            <h3 className="text-2xl font-bold mb-3 text-white">{service.title}</h3>
             <p className="text-gray-400 group-hover:text-gray-200 transition-colors duration-300 flex-grow">{service.description}</p>
             <button onClick={handleGenerateIdeas} disabled={isLoading} className="mt-4 w-full text-center py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10 border border-pink-500/50 text-pink-400 font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                 <Sparkles className="w-4 h-4" /> {isLoading ? 'Generating...' : 'Generate Ideas'}
@@ -291,9 +285,9 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section id="services" className="py-16 md:py-20 px-4 relative z-10">
+    <section id="services" className="py-20 px-4 relative z-10">
       <div className="container mx-auto">
-        <h2 className="text-3xl md:text-5xl font-bold text-center mb-12 text-white bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">Our Services</h2>
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">Our Services</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <ServiceCard key={index} service={service} />
@@ -305,19 +299,37 @@ const ServicesSection = () => {
 };
 
 // Portfolio Section
-const PortfolioSection = ({ portfolioItems }) => {
+const PortfolioSection = () => {
+    const portfolioItems = [
+        {
+            brand: "Muscletech EAA+ Energy",
+            description: "Product campaign design for a new energy and hydration supplement.",
+            image: "s1.jpg"
+        },
+        {
+            brand: "Corefuel Whey X",
+            description: "Complete branding and packaging design for a premium whey protein.",
+            image: "s2.jpg"
+        },
+        {
+            brand: "Nutrimoo Milkshake",
+            description: "Vibrant advertising creative for a new line of strawberry milkshakes.",
+            image: "s4.jpg"
+        },
+    ];
+
     return (
-        <section id="work" className="py-16 md:py-20 px-4 relative z-10">
+        <section id="work" className="py-20 px-4 relative z-10">
             <div className="container mx-auto">
-                <h2 className="text-3xl md:text-5xl font-bold text-center mb-12 text-white bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+                <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
                     Our Featured Work
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {portfolioItems.map((item, index) => (
                         <div key={index} className="glass-card rounded-2xl border border-white/10 overflow-hidden group transform hover:scale-105 transition-transform duration-300">
-                           <img src={item.image} alt={item.brand} className="w-full h-64 md:h-80 object-cover bg-white/5" />
+                           <img src={item.image} alt={item.brand} className="w-full h-80 object-cover bg-white/5" />
                            <div className="p-6">
-                               <h3 className="text-xl md:text-2xl font-bold text-white mb-2">{item.brand}</h3>
+                               <h3 className="text-2xl font-bold text-white mb-2">{item.brand}</h3>
                                <p className="text-gray-400 group-hover:text-gray-200 transition-colors duration-300">{item.description}</p>
                            </div>
                         </div>
@@ -338,9 +350,9 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section id="testimonials" className="py-16 md:py-20 px-4 relative z-10">
+    <section id="testimonials" className="py-20 px-4 relative z-10">
       <div className="container mx-auto">
-        <h2 className="text-3xl md:text-5xl font-bold text-center mb-12 text-white bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-500">What Our Clients Say</h2>
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-500">What Our Clients Say</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {testimonials.map((testimonial, index) => (
             <div key={index} className="glass-card p-6 rounded-2xl border border-white/10 shadow-lg hover:shadow-cyan-500/20 transition-shadow duration-300">
@@ -391,12 +403,12 @@ const ContactSection = () => {
         }
         setIsGenerating(true);
         setError('');
-        const prompt = `You are a creative director at a futuristic branding agency. Based on the following keywords: "${formData.keywords}", write an inspiring and professional project brief of about 50-70 words that we can present to a potential client. The tone should be confident and forward-thinking.`;
+        const prompt = You are a creative director at a futuristic branding agency. Based on the following keywords: "${formData.keywords}", write an inspiring and professional project brief of about 50-70 words that we can present to a potential client. The tone should be confident and forward-thinking.;
         
         const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
         const payload = { contents: chatHistory };
         const apiKey = ""; // Left empty for runtime injection
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        const apiUrl = https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey};
 
         try {
             const response = await fetch(apiUrl, {
@@ -405,7 +417,7 @@ const ContactSection = () => {
                 body: JSON.stringify(payload)
             });
 
-            if (!response.ok) throw new Error(`API error: ${response.statusText}`);
+            if (!response.ok) throw new Error(API error: ${response.statusText});
             
             const result = await response.json();
             let resultText = "Could not generate a brief. Please try again.";
@@ -426,22 +438,22 @@ const ContactSection = () => {
     };
 
     return (
-        <section id="contact" className="py-16 md:py-20 px-4 relative z-10">
+        <section id="contact" className="py-20 px-4 relative z-10">
             <div className="container mx-auto max-w-2xl">
-                <h2 className="text-3xl md:text-5xl font-bold text-center mb-12 text-white bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500">Get In Touch</h2>
-                <form action="https://formspree.io/f/mnnvldpb" method="POST" className="space-y-6">
+                <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500">Get In Touch</h2>
+                <form className="space-y-6">
                     <div>
                         <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">Name</label>
-                        <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 focus:ring-pink-500 focus:outline-none text-white transition-all duration-300" placeholder="Your Name" />
+                        <input type="text" id="name" value={formData.name} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 focus:ring-pink-500 focus:outline-none text-white transition-all duration-300" placeholder="Your Name" />
                     </div>
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                        <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 focus:ring-pink-500 focus:outline-none text-white transition-all duration-300" placeholder="your.name@example.com" />
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">Gmail</label>
+                        <input type="email" id="email" value={formData.email} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 focus:ring-pink-500 focus:outline-none text-white transition-all duration-300" placeholder="your.name@gmail.com" />
                     </div>
                     <div>
                         <label htmlFor="keywords" className="block text-sm font-medium text-gray-300 mb-2">Project Keywords</label>
                         <div className="flex flex-col sm:flex-row gap-2">
-                           <input type="text" id="keywords" name="keywords" value={formData.keywords} onChange={handleInputChange} className="flex-grow px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 focus:ring-pink-500 focus:outline-none text-white transition-all duration-300" placeholder="e.g., 'new energy drink, gen-z, social media'" />
+                           <input type="text" id="keywords" value={formData.keywords} onChange={handleInputChange} className="flex-grow px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 focus:ring-pink-500 focus:outline-none text-white transition-all duration-300" placeholder="e.g., 'new energy drink, gen-z, social media'" />
                            <button type="button" onClick={handleGenerateBrief} disabled={isGenerating} className="sm:w-auto px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-pink-500/50 text-pink-400 font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                                <Sparkles className="w-4 h-4" /> {isGenerating ? 'Generating...' : 'Generate Brief'}
                            </button>
@@ -450,7 +462,7 @@ const ContactSection = () => {
                     </div>
                     <div>
                         <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-2">Project Description</label>
-                        <textarea ref={descriptionRef} id="description" name="description" rows="5" value={formData.description} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 focus:ring-pink-500 focus:outline-none text-white transition-all duration-300 resize-none overflow-hidden" placeholder="Tell us about your project, or let our AI help!"></textarea>
+                        <textarea ref={descriptionRef} id="description" rows="5" value={formData.description} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 focus:ring-pink-500 focus:outline-none text-white transition-all duration-300 resize-none overflow-hidden" placeholder="Tell us about your project, or let our AI help!"></textarea>
                     </div>
                     <button type="submit" className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold text-lg hover:scale-105 transform transition-all duration-300 ease-in-out shadow-lg shadow-violet-500/30">
                         Send Message
@@ -499,7 +511,7 @@ const NovaChatbot = () => {
     
     const payload = { contents: chatHistory };
     const apiKey = ""; // Left empty for runtime injection
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    const apiUrl = https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey};
 
     try {
         const response = await fetch(apiUrl, {
@@ -509,7 +521,7 @@ const NovaChatbot = () => {
         });
 
         if (!response.ok) {
-            throw new Error(`API error: ${response.statusText}`);
+            throw new Error(API error: ${response.statusText});
         }
 
         const result = await response.json();
@@ -541,13 +553,13 @@ const NovaChatbot = () => {
 
   return (
     <>
-      <div className={`fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40 transition-all duration-500 ${isOpen ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}>
-        <button onClick={() => setIsOpen(true)} className="bg-gradient-to-br from-cyan-400 to-blue-600 text-white w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-2xl shadow-blue-500/40 hover:scale-110 transform transition-transform duration-300">
-          <MessageSquare className="w-7 h-7 md:w-8 md:h-8" />
+      <div className={fixed bottom-6 right-6 z-40 transition-all duration-500 ${isOpen ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}}>
+        <button onClick={() => setIsOpen(true)} className="bg-gradient-to-br from-cyan-400 to-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl shadow-blue-500/40 hover:scale-110 transform transition-transform duration-300">
+          <MessageSquare className="w-8 h-8" />
         </button>
       </div>
 
-      <div className={`fixed bottom-4 right-4 md:bottom-6 md:right-6 w-[calc(100%-2rem)] max-w-sm h-[70vh] max-h-[500px] z-50 transition-all duration-500 ease-in-out ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}>
+      <div className={fixed bottom-6 right-6 w-[calc(100%-3rem)] max-w-sm h-[70vh] max-h-[500px] z-50 transition-all duration-500 ease-in-out ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}}>
         <div className="h-full w-full glass-card-dark rounded-2xl border border-cyan-500/50 flex flex-col shadow-2xl shadow-cyan-500/20">
           <div className="flex items-center justify-between p-4 border-b border-white/10">
             <h3 className="font-bold text-white text-lg">Nova AI</h3>
@@ -557,8 +569,8 @@ const NovaChatbot = () => {
           </div>
           <div className="flex-grow p-4 space-y-4 overflow-y-auto">
             {messages.map(msg => (
-              <div key={msg.id} className={`flex ${msg.sender === 'ai' ? 'justify-start' : 'justify-end'}`}>
-                <div className={`max-w-[80%] p-3 rounded-lg ${msg.sender === 'ai' ? 'bg-blue-900/50 text-white' : 'bg-pink-800/50 text-white'}`}>
+              <div key={msg.id} className={flex ${msg.sender === 'ai' ? 'justify-start' : 'justify-end'}}>
+                <div className={max-w-[80%] p-3 rounded-lg ${msg.sender === 'ai' ? 'bg-blue-900/50 text-white' : 'bg-pink-800/50 text-white'}}>
                   <p className="text-sm">{msg.text}</p>
                 </div>
               </div>
@@ -598,34 +610,9 @@ const Footer = () => (
   </footer>
 );
 
-// Mobile Menu
-const MobileMenu = ({ isOpen, closeMenu }) => (
-    <div className={`fixed inset-0 bg-black/80 backdrop-blur-lg z-50 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-        <div className="flex justify-end p-4">
-            <button onClick={closeMenu} className="text-white">
-                <X className="w-8 h-8"/>
-            </button>
-        </div>
-        <nav className="flex flex-col items-center justify-center h-full -mt-16 space-y-8">
-            <a href="#about" onClick={closeMenu} className="text-3xl font-bold text-white hover:text-pink-400 transition-colors">About</a>
-            <a href="#services" onClick={closeMenu} className="text-3xl font-bold text-white hover:text-pink-400 transition-colors">Services</a>
-            <a href="#work" onClick={closeMenu} className="text-3xl font-bold text-white hover:text-pink-400 transition-colors">Work</a>
-            <a href="#contact" onClick={closeMenu} className="text-3xl font-bold text-white hover:text-pink-400 transition-colors">Contact</a>
-        </nav>
-    </div>
-);
-
 // --- MAIN APP COMPONENT ---
 export default function App() {
   const [isLaunched, setIsLaunched] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
-  const logoUrl = "https://i.ibb.co/5G3y2sW/s3.jpg";
-  const portfolioItems = [
-    { brand: "Muscletech EAA+ Energy", description: "Product campaign design for a new energy and hydration supplement.", image: "https://i.ibb.co/6wZ0S0G/s1.jpg" },
-    { brand: "Corefuel Whey X", description: "Complete branding and packaging design for a premium whey protein.", image: "https://i.ibb.co/3Wd9M9Y/s2.jpg" },
-    { brand: "Nutrimoo Milkshake", description: "Vibrant advertising creative for a new line of strawberry milkshakes.", image: "https://i.ibb.co/YhB0VvY/s4.jpg" },
-  ];
 
   const handleLaunch = () => {
     setIsLaunched(true);
@@ -633,10 +620,6 @@ export default function App() {
         document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
     }, 200);
   };
-  
-  useEffect(() => {
-      document.body.classList.toggle('no-scroll', isMenuOpen);
-  }, [isMenuOpen]);
 
   return (
     <>
@@ -652,10 +635,7 @@ export default function App() {
           color: #e0e0e0;
           font-family: 'Rajdhani', sans-serif;
           overflow-x: hidden;
-        }
-        
-        body.no-scroll {
-            overflow: hidden;
+          cursor: none;
         }
 
         .glass-card {
@@ -693,30 +673,24 @@ export default function App() {
       <PointerTrail />
 
       <div className="relative z-0">
-        <header className="fixed top-0 left-0 w-full p-4 z-30 bg-black/10 backdrop-blur-sm">
+        <header className="fixed top-0 left-0 w-full p-4 z-50 bg-black/10 backdrop-blur-sm">
           <div className="container mx-auto flex justify-between items-center">
-            <img src={logoUrl} alt="Spheremedia Logo" className="h-8 md:h-10" />
-            
-            <nav className="hidden md:flex space-x-6 text-white" style={{ animation: isLaunched ? 'fadeIn 1s ease-in' : 'none' }}>
-              {isLaunched && <>
+            {/* Corrected image path for logo */}
+            <img 
+  src="/logo.png" 
+  alt="Logo" 
+  className="w-16 h-16 rounded-full object-cover"
+/>
+            {isLaunched && (
+              <nav className="hidden md:flex space-x-6 text-white" style={{ animation: 'fadeIn 1s ease-in' }}>
                 <a href="#about" className="hover:text-pink-400 transition-colors">About</a>
                 <a href="#services" className="hover:text-pink-400 transition-colors">Services</a>
                 <a href="#work" className="hover:text-pink-400 transition-colors">Work</a>
                 <a href="#contact" className="hover:text-pink-400 transition-colors">Contact</a>
-              </>}
-            </nav>
-
-            {isLaunched && (
-                <div className="md:hidden">
-                    <button onClick={() => setIsMenuOpen(true)} className="text-white">
-                        <MenuIcon className="w-7 h-7" />
-                    </button>
-                </div>
+              </nav>
             )}
           </div>
         </header>
-
-        <MobileMenu isOpen={isMenuOpen} closeMenu={() => setIsMenuOpen(false)} />
 
         <main>
           <HeroSection onLaunch={handleLaunch} />
@@ -724,7 +698,7 @@ export default function App() {
             <div className="content-reveal">
               <AboutSection />
               <ServicesSection />
-              <PortfolioSection portfolioItems={portfolioItems} />
+              <PortfolioSection />
               <TestimonialsSection />
               <ContactSection />
             </div>
@@ -733,8 +707,8 @@ export default function App() {
         
         {isLaunched && (
           <div style={{ animation: 'fadeIn 1s 0.5s both' }}>
-            <a href="https://www.instagram.com/spheremedia.in" target="_blank" rel="noopener noreferrer" className="fixed bottom-4 left-4 md:bottom-6 md:left-6 z-40 bg-gradient-to-br from-pink-500 to-orange-400 text-white w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-2xl shadow-pink-500/40 hover:scale-110 transform transition-transform duration-300">
-                <InstagramIcon className="w-7 h-7 md:w-8 md:h-8"/>
+            <a href="https://www.instagram.com/spheremedia.in" target="_blank" rel="noopener noreferrer" className="fixed bottom-6 left-6 z-40 bg-gradient-to-br from-pink-500 to-orange-400 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl shadow-pink-500/40 hover:scale-110 transform transition-transform duration-300">
+                <InstagramIcon className="w-8 h-8"/>
             </a>
             <NovaChatbot />
             <Footer />
